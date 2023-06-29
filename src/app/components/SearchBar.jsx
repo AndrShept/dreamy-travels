@@ -5,19 +5,21 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useSearchStore } from '@/lib/store';
 
-export const SearchBar = () => {
+export const SearchBar = ({toggleExpanded}) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(null)
 
+
+  const {location} = useSearchStore(state=> state)
+  const startDate = useSearchStore(state=> state.dates[0])
+  const endDate = useSearchStore(state=> state.dates[1])
+  const handleLocationUpdate = (e)=>{
+    useSearchStore.setState({location: e.target.value})
+  }
   const handleSelect = (ranges) => {
-    if(ranges.selection.startDate !== startDate){
-        setStartDate(ranges.selection.startDate)
-    }
-    if(ranges.selection.startDate !== endDate){
-        setEndDate(ranges.selection.endDate)
-    }
+    useSearchStore.setState({dates: [ranges.selection.startDate , ranges.selection.endDate]})
+
   }
   const selectionRange = {
     startDate: startDate,
@@ -30,6 +32,8 @@ export const SearchBar = () => {
       <p className='font-bold'>Where</p>
         {isSearchFocused ? (
           <input
+          value={location}
+          onChange={handleLocationUpdate}
             type='text'
             placeholder='Search destination'
             className='text-slate-800 bg-transparent border-none outline-none'
@@ -60,7 +64,7 @@ export const SearchBar = () => {
             <p>  <Counter label='Adults'/></p>
         </div>
       </div>
-      <Link href='/search/results' className='btn-primary text-white rounded-full gap-3  p-4 flex '>
+      <Link href='/search/results' onClick={toggleExpanded} className='btn-primary text-white rounded-full gap-3  p-4 flex '>
       <MagnifyingGlassIcon className="h-6 w-6 " />
         <span>Search</span>
       </Link>

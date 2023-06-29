@@ -1,3 +1,4 @@
+import { useSearchStore } from '@/lib/store';
 import React from 'react';
 
 const CountIcon = ({icon, onClick}) => {
@@ -10,17 +11,17 @@ const CountIcon = ({icon, onClick}) => {
 
 
 export const Counter = ({ label }) => {
-  const [count, setCount] = React.useState(0);
+  const {increaseGuests, decreaseGuests, guests} = useSearchStore(state=> state)
   return (
     <div className='flex justify-between'>
       <p>{label}</p>
       <div className='flex items-center gap-x-1'>
 
         {
-            count > 0 && <CountIcon icon='-' onClick={()=> setCount(prevCount => prevCount - 1)} />
+            guests > 0 && <CountIcon icon='-' onClick={()=> decreaseGuests()} />
         }
-        <span>{count}</span>
-        <CountIcon icon='+' onClick={()=> setCount(prevCount => prevCount + 1)} />
+        <span>{guests}</span>
+        <CountIcon icon='+' onClick={()=> increaseGuests()} />
       </div>
     </div>
   );
