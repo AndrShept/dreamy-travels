@@ -5,8 +5,8 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useClickAway } from 'react-use';
-import { UserCircleIcon } from "@heroicons/react/24/solid";
-
+import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { motion } from 'framer-motion';
 
 const Header = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -25,11 +25,12 @@ const Header = () => {
       'h-[13rem]': isExpanded,
     }
   );
-  useClickAway(ref, ()=>{
-    if(isExpanded){
-      setIsExpanded(false)
+  useClickAway(ref, () => {
+    if (isExpanded) {
+      setIsExpanded(false);
     }
-  })
+  });
+
 
   const toggleExpanded = () => {
     setIsExpanded((prevExpanded) => !prevExpanded);
@@ -43,9 +44,17 @@ const Header = () => {
           </Link>
 
           {isExpanded ? (
-            <SearchBar toggleExpanded={toggleExpanded}/>
+            <SearchBar toggleExpanded={toggleExpanded} />
           ) : (
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 100, scale: 0 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+              }}
+              exit={{opacity:0}}
+              transition={{ duration: 0.2 }}
               onClick={toggleExpanded}
               className={clsx(
                 '  flex flex-row py-2 px-4 justify-center items-center rounded-full border drop-shadow-md bg-white',
@@ -67,18 +76,25 @@ const Header = () => {
               <div className='search-btn rounded-full px-4 bg-primary h-10 w-10 relative'>
                 <MagnifyingGlassIcon className='h-6 w-6 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ' />
               </div>
-            </button>
+            </motion.button>
           )}
 
-          <div><UserCircleIcon className="h-10 w-10 text-gray-500 cursor-pointer duration-200 hover:shadow-xl rounded-full" /></div>
+          <div>
+            <UserCircleIcon
+              className={clsx(
+                'h-10 w-10 text-gray-500 cursor-pointer duration-200 hover:shadow-xl rounded-full',
+                {}
+              )}
+            />
+          </div>
         </div>
       </header>
       <div
         className={clsx(
           'absolute left-0 top-0 w-full h-full z-40 bg-black/50 duration-500 transition-opacity ',
           {
-            'hidden opacity-0': !isExpanded,
-            'block opacity-100': isExpanded,
+            'hidden ': !isExpanded,
+            'block ': isExpanded,
           }
         )}
       ></div>
