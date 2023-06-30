@@ -10,8 +10,8 @@ import { motion } from 'framer-motion';
 
 export const SearchBar = ({ toggleExpanded }) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-
-  const { location } = useSearchStore((state) => state);
+  const [dataRangeLabel, setDataRangeLabel] = useState('Select Ranges');
+  const { location, guests } = useSearchStore((state) => state);
   const startDate = useSearchStore((state) => state.dates[0]);
   const endDate = useSearchStore((state) => state.dates[1]);
   const handleLocationUpdate = (e) => {
@@ -21,6 +21,7 @@ export const SearchBar = ({ toggleExpanded }) => {
     useSearchStore.setState({
       dates: [ranges.selection.startDate, ranges.selection.endDate],
     });
+    setDataRangeLabel(`${ranges.selection.startDate.toDateString()} - ${ranges.selection.endDate.toDateString()}`);
   };
   const selectionRange = {
     startDate: startDate,
@@ -37,7 +38,7 @@ export const SearchBar = ({ toggleExpanded }) => {
       }}
       transition={{ duration: 0.3 }}
       exit={{ opacity: 0, y: 0 }}
-      className='flex  justify-between  items-center rounded-full border p-2 mt-8 w-3/4'
+      className='flex  justify-between  items-center rounded-full border p-2 mt-8 '
     >
       <button
         className='border-r px-4 text-left grow'
@@ -59,7 +60,7 @@ export const SearchBar = ({ toggleExpanded }) => {
       <div className='dropdown dropdown-end border-r px-2'>
         <label tabIndex={1}>
           <p className='font-bold'> Dates</p>
-          <p className='text-slate-600'>Select Ranges</p>
+          <p className='text-slate-600'>{dataRangeLabel}</p>
         </label>
         <div
           tabIndex={1}
@@ -75,7 +76,7 @@ export const SearchBar = ({ toggleExpanded }) => {
       <div className='dropdown dropdown-end  px-2'>
         <label tabIndex={2}>
           <p className='font-bold'>Who</p>
-          <p className='text-slate-600 '>Add Guests</p>
+          <p className='text-slate-600 '>{guests > 0 ? `${guests} Guests`: 'Add Guests' }</p>
         </label>
         <div
           tabIndex={2}

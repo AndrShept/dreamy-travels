@@ -7,13 +7,14 @@ import Link from 'next/link';
 import { useClickAway } from 'react-use';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
+import { MobileNav } from '../components/MobileNav';
 
 const Header = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const ref = useRef(null);
   const headerContainerClasses = clsx(
     'container',
-    'items-center',
+'md:items-start items-center ',
     'mx-auto',
     'flex',
     'justify-between',
@@ -21,8 +22,8 @@ const Header = () => {
     'py-8',
     'z-50',
     {
-      'h-[7.5rem]': !isExpanded,
-      'h-[13rem]': isExpanded,
+      'h-[7.5rem] ': !isExpanded,
+      'h-[13rem] ': isExpanded,
     }
   );
   useClickAway(ref, () => {
@@ -31,7 +32,6 @@ const Header = () => {
     }
   });
 
-
   const toggleExpanded = () => {
     setIsExpanded((prevExpanded) => !prevExpanded);
   };
@@ -39,47 +39,51 @@ const Header = () => {
     <>
       <header ref={ref} className='flex fixed bg-white border-b z-50 w-full '>
         <div className={headerContainerClasses}>
-          <Link href='/' className='text-primary font-extrabold text-xl '>
+          <Link href='/' className='text-primary font-extrabold text-xl md:block hidden'>
             DREAMY-TRAVELS
           </Link>
+          <div className='hidden md:flex'>
+            {isExpanded ? (
+              <SearchBar toggleExpanded={toggleExpanded} />
+            ) : (
+              <motion.button
+                initial={{ opacity: 0, y: 100, scale: 0 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={toggleExpanded}
+                className={clsx(
+                  '  flex flex-row py-2 px-4 justify-center items-center rounded-full border drop-shadow-md bg-white',
+                  {
+                    'border-b-0 r': !isExpanded,
+                    'border-b-8 ': isExpanded,
+                  }
+                )}
+              >
+                <div className='input flex items-center px-4 border-r'>
+                  <p className='font-bold'>Anywhere</p>
+                </div>
+                <div className='input flex items-center px-4 border-r'>
+                  <p className='font-bold'>Any Date</p>
+                </div>
+                <div className='input flex items-center px-4 border-r'>
+                  <p className='font-bold'>Add Guests</p>
+                </div>
+                <div className='search-btn rounded-full px-4 bg-primary h-10 w-10 relative'>
+                  <MagnifyingGlassIcon className='h-6 w-6 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ' />
+                </div>
+              </motion.button>
+            )}
+          </div>
+          <div className='md:hidden flex-grow'>
 
-          {isExpanded ? (
-            <SearchBar toggleExpanded={toggleExpanded} />
-          ) : (
-            <motion.button
-              initial={{ opacity: 0, y: 100, scale: 0 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-              }}
-              exit={{opacity:0}}
-              transition={{ duration: 0.2 }}
-              onClick={toggleExpanded}
-              className={clsx(
-                '  flex flex-row py-2 px-4 justify-center items-center rounded-full border drop-shadow-md bg-white',
-                {
-                  'border-b-0': !isExpanded,
-                  'border-b-8': isExpanded,
-                }
-              )}
-            >
-              <div className='input flex items-center px-4 border-r'>
-                <p className='font-bold'>Anywhere</p>
-              </div>
-              <div className='input flex items-center px-4 border-r'>
-                <p className='font-bold'>Any Date</p>
-              </div>
-              <div className='input flex items-center px-4 border-r'>
-                <p className='font-bold'>Add Guests</p>
-              </div>
-              <div className='search-btn rounded-full px-4 bg-primary h-10 w-10 relative'>
-                <MagnifyingGlassIcon className='h-6 w-6 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ' />
-              </div>
-            </motion.button>
-          )}
-
-          <div>
+          <MobileNav />
+          </div>
+          <div className=''>
             <UserCircleIcon
               className={clsx(
                 'h-10 w-10 text-gray-500 cursor-pointer duration-200 hover:shadow-xl rounded-full',
